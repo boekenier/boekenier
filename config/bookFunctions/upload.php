@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('../config/db.php');
+require_once('../db.php');
 date_default_timezone_set('Europe/Amsterdam');
 $valid_file = true;
 if($_FILES['file']['name']){

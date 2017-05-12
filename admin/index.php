@@ -1,59 +1,72 @@
 <?php
 session_start();
-if(!isset($_SESSION['user'])){
-  echo "<script>window.location.href = '../index.php';</script>";
-}
-if($_SESSION['user'] != 1){
-  echo "<script>window.location.href = '../hidden/index.php';</script>";
-}
+include_once('../config/allowedCheck.php');
+require_once('../config/db.php');
+$sql = "SELECT id, username, rank FROM users ORDER BY rank DESC";
+$result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Boekenier - controlpanel</title>
-    <?php include_once '../css/head.html'; ?>
+    <title>Boekenier - Controlpanel</title>
+    <?php
+    include_once '../css/head.html';
+    ?>
   </head>
-  <?php include_once('../css/nav.php'); ?>
+  <?php
+  include_once('../css/nav.php');
+  ?>
   <body>
     <div class="container">
-      <?php if(isset($_SESSION['message'])){?>
-        <div class="alert alert-info">
-          <?php echo $_SESSION['message'];
-          unset($_SESSION['message']);
-          ?>
+      <div class="row">
+        <div class="col-xs-6 col-md-10 offset-1">
+          <div class="card">
+            <div class="card-block">
+              <div class="alert alert-danger" id="output" style="display: none;"></div>
+              <?php if($result->num_rows > 0){ ?>
+                total accounts: <?php echo $result->num_rows;?>
+            <table class="table table-striped table-hover">
+              <tr>
+                <th>Username</th>
+                <th>Action</th>
+                <th>Rank</th>
+              </tr>
+                <?php while($row = $result->fetch_assoc()){ ?>
+                  <tr>
+                  <td>
+                    <b><?php echo $row['username']?></b>
+                  </td>
+                  <td>
+                    <select onchange="updateRank(<?php echo $row['id'];?>)" class="form-control" id="rank<?php echo $row['id'];?>">
+                      <?php for($j = 1; $j <= 4; $j++){?>
+                        <option <?php echo $row['rank'] == $j ? "selected" : "";?> value="<?php echo $j;?>">Set rank to: <?php echo $j;?></option>
+                      <?php } ?>
+                    </select>
+                  <td>
+                    <button id="remove" onclick="deleteUser(<?php echo $row['id'];?>)" type="button" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete '<?php echo $row['username'];?>'">
+                      <span class="fa fa-times"></span>
+                    </button>
+                  </td>
+                  <?php
+                }
+              } else { ?>
+                <td colspan="6">
+                <?php echo "We didn't find any users"; ?>
+              </td>
+              </tr>
+               <?php } ?>
+              </table>
+          </div>
         </div>
-        <?php } ?>
-        <div class="card">
-          <div class="card-block">
-            <h4 class="card-title">Upload book</h4>
-            <form method="post" action="../config/upload.php" enctype="multipart/form-data">
-              <div class="form-group">
-                <label class="control-label">Choose file</label>
-                <input type="file" name="file" class="form-control">
-              </div>
-              <div class="form-group">
-                <label class="control-label">Title</label>
-                <input type="text" name="title" class="form-control">
-              </div>
-          <div class="form-group">
-            <label class="control-label">Author</label>
-            <input type="text" name="author" class="form-control">
-          </div>
-          <div class="form-group">
-            <label class="control-label">Version</label>
-            <input type="number" name="version" value='1' step='1' min="1" class="form-control">
-          </div>
-          <div class="form-group">
-            <button class="btn btn-success" type="submit"><span class="fa fa-upload"></span> Upload</button>
-          </div>
-        </form>
       </div>
     </div>
-    <script>
-      function back(){
-        window.location.href = '../hidden';
-      }
-    </script>
+  </div>
+      <script>
+      $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+      });
+      </script>
+      <script src="../js/main.js"></script>
   </body>
 </html>

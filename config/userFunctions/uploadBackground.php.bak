@@ -1,0 +1,34 @@
+<?php
+/*session_start();
+require_once('../db.php');
+$valid_file = true;
+*/
+var_dump("TEST");
+/*if($_FILES['background']['name']){
+  if(!$_FILES['background']['error']){
+    $new_file_name = $_POST['name'].'-background';
+    if($_FILES['background']['size'] > (5000000)){
+      $valid_file = false;
+      echo "It appears that the file is to large";
+    }
+    $type = pathinfo($_FILES['background']['name'], PATHINFO_EXTENSION);
+    if($type != 'png' && $type != 'jpeg' && $type != 'jpg' && $type !='gif') {
+      $valid_file = false;
+    }
+
+   if($valid_file){
+        if(move_uploaded_file($_FILES['background']['tmp_name'], '../../user/img/profile_pics/'.$new_file_name.'.'.$type)){
+          echo "File has been uploaded";
+        } else {
+          echo "Something went wrong!";
+        }
+      $sql = "UPDATE users SET background = '$new_file_name.$type', theme_color = NULL WHERE username='$_POST[name]'";
+      if($conn->query($sql) === false){
+        echo "Something went wrong uploading the file";
+      }
+    } else {
+      echo "Image is not a png, jpeg/jpg or gif file";
+    }
+  }
+}*/
+?>
