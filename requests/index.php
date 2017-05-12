@@ -2,6 +2,7 @@
 session_start();
 include_once('../config/allowedCheck.php');
 require_once('../config/db.php');
+// Get all requests
 $sql = "SELECT * FROM requests ORDER BY request_date";
 $result = $conn->query($sql);
 ?>

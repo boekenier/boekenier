@@ -1,4 +1,5 @@
 <?php
+// Add invite code to database
 require_once('../db.php');
 $sql = "INSERT INTO invites (invite_code) VALUES ('$_POST[code]')";
 if($conn->query($sql) === true){

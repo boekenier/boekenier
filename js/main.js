@@ -1,8 +1,10 @@
 function deleteItem(id){
+  // Send id to delete.php via ajax
   $.ajax({
     type: "POST",
     url: "../config/bookFunctions/delete.php",
     data: {id},
+    // if success then reload page
     success: function(){
       location.reload();
     }
@@ -10,14 +12,17 @@ function deleteItem(id){
 }
 
 function deleteUser(id){
+  // Send id to deleteUser.php via ajax
   $.ajax({
     type: "POST",
     url: "../config/userFunctions/deleteUser.php",
     data: {id},
     success: function(data){
+      // if success then reload page
       if(data == "success"){
         location.reload();
       } else {
+        // else show error
         $('#output').html(data);
         $('#output').show('slow');
       }
@@ -26,6 +31,7 @@ function deleteUser(id){
 }
 
 function updateRank(id){
+  // send id and id to updateRank.php via ajax
   var rank = $('#rank'+id+' option:selected').val();
   $.ajax({
     type: "POST",
@@ -35,9 +41,11 @@ function updateRank(id){
       rank: rank
     },
     success: function(data){
+      // if success then reload page
       if(data == "success"){
         location.reload();
       } else {
+        // else show error
         $('#output').html('Failed: '+data);
         $('#output').show('slow');
       }
@@ -49,9 +57,11 @@ function closemsg(){
   $('#successmsg').hide(500);
 }
 
+// Open filebrowser
 function openFile(){
   $('#userImage').click();
 }
+// If input has changed show uploadbar
 $('input[type=file]').change(function(e){
   var filename = $(this).val().split("\\");
   $('#fileLocation').html(filename[2]);
@@ -64,18 +74,20 @@ $('input[type=file]').change(function(e){
 
 var codeGenerated = false;
 var themeColor = "";
-
+  // Get themeColor in hex
   function colorPick(){
     themeColor = $('#themeColor').val();
   }
-
+  // if themeColor is empty set themeColor to white (#ffffff)
   function changeUser(type, id){
     if(themeColor == ""){
       themeColor = "#FFFFFF";
     }
+    // if previewSrc is not empty submit form
     if(($("#previewSrc")[0].currentSrc) != ""){
       $("#input").submit();
     } else {
+    // send variables to changeUser.php via ajax
     var currentPass = $('#oldpassword').val();
     var pass1 = $('#password').val();
     var pass2 = $('#password2').val();
@@ -92,9 +104,11 @@ var themeColor = "";
           id: id,
           username: username
         },
+        // if success and type is theme then reload page
         success: function(data){
           if(data == 'success' && type == 'theme'){
             location.reload();
+            // if success and type is password then empty input fields, and show message
           } else if(data == 'success' && type == 'password'){
             $('#oldpassword').val('');
             $('#password').val('');
@@ -103,7 +117,7 @@ var themeColor = "";
             $('#output').addClass('alert alert-success');
             $('#output').show('slow');
           } else {
-            console.log("Error: "+data);
+            // else empty input fields and show error message
             $('#oldpassword').val('');
             $('#password').val('');
             $('#password2').val('');
@@ -115,9 +129,10 @@ var themeColor = "";
       });
     }
   }
-
+  // if background form is submitted
   $('#imageTheme').on('submit', (function(e){
     e.preventDefault();
+    // Send form data to uploadBackground.php via ajax
     $.ajax({
       url: '../config/userFunctions/uploadBackground.php',
       type: 'POST',
@@ -126,20 +141,29 @@ var themeColor = "";
       cache: false,
       processData: false,
       success: function(data){
+        // if success then reload page
         if(data == "File has been uploaded"){
           location.reload();
         } else {
-          console.log("Error: "+data);
+          // else show error message
+          $('#output').html(data);
+          $('#output').addClass('alert alert-danger');
+          $('#output').show('slow');
         }
       },
       error: function(data){
-        console.log("Error: "+data);
+        // if error show error message
+        $('#output').html(data);
+        $('#output').addClass('alert alert-danger');
+        $('#output').show('slow');
       },
     });
   }));
 
+  // if upload form is submitted
   $('#uploadForm').on('submit', (function(e){
     e.preventDefault();
+    // Send form data to uploadProfilePic.php via ajax
     $.ajax({
       url: '../config/userFunctions/uploadProfilePic.php',
       type: 'POST',
@@ -148,15 +172,18 @@ var themeColor = "";
       cache: false,
       processData: false,
       success: function(data){
+          // if success then reload page
         if(data == "File has been uploaded"){
           location.reload();
         } else {
+            // else show error message
           $('#fileOutput').html(data);
           $('#fileOutput').addClass('alert alert-danger');
           $('#fileOutput').show('slow');
         }
       },
       error: function(data){
+          // if error show error message
         $('#fileOutput').html(data);
         $('#fileOutput').addClass('alert alert-danger');
         $('#fileOutput').show('slow');
@@ -164,14 +191,16 @@ var themeColor = "";
     });
   }));
 
+  // if fileupload is changed submit form
   $('#fileupload').on('change', function(){
     $('#fileupload').submit();
   });
+
+// if background image is loaded in, show as preview
 var URL = window.URL || window.webkitURL;
 var input = document.querySelector('#input');
 var previewSrc = document.querySelector('#previewSrc');
 input.addEventListener('change', function(){
-  console.log("line 152");
   previewSrc.src = URL.createObjectURL(this.files[0]);
 });
 
@@ -184,6 +213,8 @@ previewSrc.addEventListener('load', function(){
   $("#preview").show('slow');
 });
 
+
+  // Random generate invite code and send via ajax
   function getCode(){
     if(!codeGenerated){
       var length = 80;
@@ -208,9 +239,10 @@ previewSrc.addEventListener('load', function(){
   }
 
   function send(to, from){
-    var subject = $('#subject').val();
-    var message = CKEDITOR.instances['message'].getData();
-    if(subject != "" && subject != undefined && message != "" && message != undefined){
+    var subject = $('#subject').val(); // get subject
+    var message = CKEDITOR.instances['message'].getData(); // get message
+    if(subject != "" && subject != undefined && message != "" && message != undefined){ // check if subject and message is not empty
+      // send to sendMessage via ajax
       $.ajax({
         url: '../config/messageFunctions/sendMessage.php',
         type: "POST",
@@ -220,6 +252,7 @@ previewSrc.addEventListener('load', function(){
           subject: subject,
           message: message
         },
+        // if success show message and reset input fields
         success: function(data){
           if(data == "Message send"){
             $('#output').html(data);
@@ -228,13 +261,13 @@ previewSrc.addEventListener('load', function(){
             $('#subject').val("");
             CKEDITOR.instances['message'].setData("");
           } else {
+            // else show error message
             $('#output').html(data);
             $('#output').addClass('alert alert-danger');
             $('#output').show('slow');
-            $('#subject').val("");
-            $('#message').val("");
           }
         },
+        // if error show error message
         error: function(data){
           $('#output').html(data);
           $('#output').addClass('alert alert-danger');
@@ -242,12 +275,14 @@ previewSrc.addEventListener('load', function(){
         }
       });
     } else {
+      // Show message if subject or message is empty
       $('#output').html("Subject and message has to be filled in");
       $('#output').addClass('alert alert-danger');
       $('#output').show('slow');
     }
   }
 
+// Show login form
 function showLogin(){
   $('#registerfield').hide('slow');
   $('#loginfield').show('slow');
@@ -255,19 +290,23 @@ function showLogin(){
 
 }
 
+// Show register form
 function showRegister(){
   $('#registerfield').show('slow');
   $('#loginfield').hide('slow');
 }
 
 function register(){
-  var username = $('#username').val();
-  var password = $('#password').val();
-  var password2 = $('#password2').val();
-  var code = $('#inviteCode').val();
+  var username = $('#username').val(); // get username
+  var password = $('#password').val(); // get password
+  var password2 = $('#password2').val(); // get password2
+  var code = $('#inviteCode').val(); // get invite code
 
+  // if password length is 8 or more continue
   if(password.length >= 8){
+    //  check if passwords match
     if(password == password2){
+      // send data to register.php via ajax
       $.ajax({
         type: "POST",
         url: 'config/siteFunctions/register.php',
@@ -276,6 +315,7 @@ function register(){
           password: password,
           code: code
         },
+        // if success then show thank you message and reset fields
         success: function(data){
           if(data === "success"){
             $('#output').html('<div class="alert alert-success">Thank you for registering '+username+'</div>');
@@ -284,6 +324,7 @@ function register(){
             $('#password2').val('');
             $('#inviteCode').val('');
           } else {
+            // else show error message and reset password and invite fields
             $('#output').html('<div class="alert alert-danger">'+data+'</div>');
             $('#password').val('');
             $('#password2').val('');
@@ -291,12 +332,14 @@ function register(){
           }
         }
       });
+      // if passwords do not match show error message
     } else {
       $('#output').html('<div class="alert alert-danger">Passwords do not match</div>');
       $('#password').val('');
       $('#password2').val('');
     }
   } else {
+    // if password length is not 8 or more show error message
     $('#output').html('<div class="alert alert-danger">Password has to be 8 characters or longer</div>');
     $('#password').val('');
     $('#password2').val('');
@@ -305,6 +348,7 @@ function register(){
 
 
 function deleteMsg(msg_id, pivot_id){
+  // send msg_id and pivot_id to deleteMsg via ajax
   $.ajax({
     url: '../config/messageFunctions/deleteMsg.php',
     type: 'POST',
@@ -313,9 +357,11 @@ function deleteMsg(msg_id, pivot_id){
       pivot_id: pivot_id
     },
     success: function(data){
+      // if success reload page
       if(data === "Message deleted"){
         location.reload();
       } else {
+        // else show error
         $('#output').html(data);
         $('#output').addClass('alert alert-danger');
         $('#output').show('slow');
@@ -324,12 +370,14 @@ function deleteMsg(msg_id, pivot_id){
   });
 }
 
+// Show request form
 function showRequestForm(){
   $('#requestForm').show(750);
   $('#formBtn').hide(750);
 }
 
 function requestDelete(id){
+  // send id to deleteRequests via ajax
   $.ajax({
     type: 'POST',
     url: '../requests/deleteRequests.php',
@@ -337,19 +385,22 @@ function requestDelete(id){
       id: id
     },
     success: function(data){
+      // if success then reload page
       if(data == "success"){
-        window.location = 'index.php';
+        location.reload();
       } else {
+        // else show error
         $('#error').show(750);
-        $('#msg').val('Error: '+date);
+        $('#msg').val('Error: '+data);
       }
     }
   });
 }
 
 function request(){
-  var title = $('#title').val();
-  if(title != ''){
+  var title = $('#title').val(); // get request title
+  if(title != ''){ // check if title is not empty
+    // send title to addRequests via ajax
     $.ajax({
       type: 'POST',
       url: '../requests/addRequests.php',
@@ -357,24 +408,27 @@ function request(){
         title: title
       },
       success: function(data){
+        // if success then reload page
         if(data == "success"){
-          window.location = 'index.php';
+          location.reload();
         } else {
+          // else show error message
           $('#error').show(750);
           $('#msg').val('Error: '+data);
         }
       }
     });
   } else {
+    // if title is empty show message
     $('#error').show(750);
     $('#msg').val('Please fill in the title');
   }
 }
 
 function changeState(id){
-  var state = $("#done"+id).val();
-  console.log(state);
+  var state = $("#done"+id).val(); // get state
   $.ajax({
+    // send state and id to changeState via ajax
     url: "../requests/changeState.php",
     type: "POST",
     data: {
@@ -382,21 +436,21 @@ function changeState(id){
       state: state
     },
     success: function(data){
+      // if success then reload page
       if(data == "success"){
         location.reload();
       } else {
-        console.log("[ERROR] "+data);
+        // else show error
+        $('#error').show(750);
+        $('#msg').val('Error: '+data);
       }
     }
   });
 }
 
-$("#changelog").on('click', function(e){
-  e.preventDefault();
-  console.log("Clicked");
-  $("#changelog-modal").modal('toggle');
-});
-
+/* These functions are deprecated
+ * if you want to use it
+ * then you need to kill the bugs first
 
 function addFriend(receivingId, requestId){
   // Send via ajax
@@ -459,8 +513,10 @@ function deleteFriend(receivingId, requestId){
     }
   });
 }
+*/
 
 function getUrlParameter(sParam){
+  // Get url parameter
   var sPageUrl = decodeURIComponent(window.location.search.substring(1)),
       sURLVariables = sPageUrl.split('&'),
       sParametername,

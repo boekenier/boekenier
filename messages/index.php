@@ -2,6 +2,7 @@
 session_start();
 include_once('../config/siteFunctions/allowedCheck.php');
 require_once('../config/db.php');
+// Get all messages where user is receiver
 $sql = "SELECT message_pivot.*, Messages.*, users.*
         FROM message_pivot
           LEFT JOIN Messages

@@ -13,6 +13,7 @@ include_once('../config/allowedCheck.php');
   <?php include_once('../css/nav.php'); ?>
   <body>
     <div class="container">
+      <!-- if there is a message then show it -->
       <?php if(isset($_SESSION['message'])){?>
         <div class="alert alert-info">
           <?php echo $_SESSION['message'];

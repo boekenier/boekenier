@@ -4,6 +4,7 @@ include_once('../config/siteFunctions/allowedCheck.php');
 include_once('../config/siteFunctions/checkUser.php');
 
 require_once('../config/db.php');
+// get other user data
 $sql = "SELECT * FROM users WHERE username = '$_GET[user]'";
 $result = $conn->query($sql);
 if($result->num_rows == 0){
@@ -13,11 +14,16 @@ $row = $result->fetch_assoc();
 if($row['id'] == $_SESSION['user']){
   echo "<script>window.location.href = '../user/';</script>";
 }
+
+/* this code is deprecated
+   if you want to use it
+   you need to kill the bugs first
 $sql2 = "SELECT * FROM friends_pivot WHERE request_user_id = '$_SESSION[user]' AND receiver_user_id = '$row[id]' OR request_user_id = '$row[id]' AND receiver_user_id = '$_SESSION[user]'";
 $result2 = $conn->query($sql2);
 if($result2 != false && $result2->num_rows > 0){
   $row2 = $result2->fetch_assoc();
 }
+*/
 ?>
 <!DOCTYPE html>
 <html>
@@ -78,7 +84,7 @@ if($result2 != false && $result2->num_rows > 0){
       var reply = getUrlParameter('reply');
       var subject = getUrlParameter('title');
       if(reply == 1){
-        $("#subject").val('RE: '+subject);
+        $("#subject").val('RE: '+subject); // if message is a reply add RE: infront of subject
       }
       </script>
   </body>

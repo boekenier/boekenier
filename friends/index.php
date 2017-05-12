@@ -1,3 +1,7 @@
+<!-- this file is deprecated
+     if you want to use it
+     then you need to kill
+     the bug first -->
 <?php
 session_start();
 include_once('../config/siteFunctions/allowedCheck.php');

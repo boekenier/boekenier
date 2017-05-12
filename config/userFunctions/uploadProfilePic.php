@@ -1,4 +1,5 @@
 <?php
+// Upload profile picture provided by user
 session_start();
 require_once('../db.php');
 $valid_file = true;
@@ -11,15 +12,17 @@ if($_FILES['profile_pic']['name']){
     }
     $type = pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION);
     if($type != 'png' && $type != 'jpeg' && $type != 'jpg' && $type !='gif') {
-      $valid_file = false;
+      $valid_file = false; // if type is not png jpeg jpg or gif then set valid_file false
     }
 
-    if($valid_file){
+    if($valid_file){ // valid_file is true
+        // move file to folder
         if(move_uploaded_file($_FILES['profile_pic']['tmp_name'], '../user/img/profile_pics/'.$new_file_name.'.'.$type)){
           echo "File has been uploaded";
         } else {
           echo "Something went wrong!";
         }
+        // if move is successfull then set profile_pic to file location
       $sql = "UPDATE users SET profile_pic = '$new_file_name.$type' WHERE username='$_POST[name]'";
       if($conn->query($sql) === false){
         echo "Something went wrong uploading the file";

@@ -1,4 +1,5 @@
 <?php
+// Delete user by givin id
 session_start();
 require_once('../db.php');
 if($_SESSION['user'] != $_POST['id']){

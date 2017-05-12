@@ -1,7 +1,9 @@
 <?php
 session_start();
+// Include allowedCheck.php and db.php
 include_once('../config/allowedCheck.php');
 require_once('../config/db.php');
+// Get id, username and rank from users and order by highest rank
 $sql = "SELECT id, username, rank FROM users ORDER BY rank DESC";
 $result = $conn->query($sql);
 ?>
@@ -25,6 +27,7 @@ $result = $conn->query($sql);
             <div class="card-block">
               <div class="alert alert-danger" id="output" style="display: none;"></div>
               <?php if($result->num_rows > 0){ ?>
+                <!-- count all the accounts -->
                 total accounts: <?php echo $result->num_rows;?>
             <table class="table table-striped table-hover">
               <tr>
@@ -38,12 +41,14 @@ $result = $conn->query($sql);
                     <b><?php echo $row['username']?></b>
                   </td>
                   <td>
+                    <!-- when select has changed update via ajax -->
                     <select onchange="updateRank(<?php echo $row['id'];?>)" class="form-control" id="rank<?php echo $row['id'];?>">
                       <?php for($j = 1; $j <= 4; $j++){?>
                         <option <?php echo $row['rank'] == $j ? "selected" : "";?> value="<?php echo $j;?>">Set rank to: <?php echo $j;?></option>
                       <?php } ?>
                     </select>
                   <td>
+                    <!-- if button is pressed delete user -->
                     <button id="remove" onclick="deleteUser(<?php echo $row['id'];?>)" type="button" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Delete '<?php echo $row['username'];?>'">
                       <span class="fa fa-times"></span>
                     </button>
@@ -67,6 +72,7 @@ $result = $conn->query($sql);
         $('[data-toggle="tooltip"]').tooltip();
       });
       </script>
+      <!-- load main.js -->
       <script src="../js/main.js"></script>
   </body>
 </html>

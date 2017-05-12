@@ -1,5 +1,6 @@
 <?php
 session_start();
+// Delete a book with givin id
 require_once('../db.php');
 $sql = "SELECT * FROM books WHERE id = '$_POST[id]'";
 $result = $conn->query($sql);
@@ -8,6 +9,7 @@ if($result->num_rows > 0){
   $filename = '/files/'.$row['filename'].'.bkcrypt';
   $sql = "DELETE FROM books WHERE id = '$_POST[id]'";
   if($conn->query($sql) === true){
+    // Book is deleted in database delete file
     if(file_exists('../'.$filename)){
       unlink('../'.$filename);
     } else {

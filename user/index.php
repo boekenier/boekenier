@@ -2,11 +2,9 @@
 session_start();
 include_once('../config/siteFunctions/allowedCheck.php');
 require_once('../config/db.php');
+// current user's data
 $sql = "SELECT * FROM users WHERE id = '$_SESSION[user]'";
 $result = $conn->query($sql);
-if($result->num_rows == 0){
-  echo "<script>window.location.href = '../403.html';</script>";
-}
 $row = $result->fetch_assoc();
 ?>
 <!DOCTYPE html>

@@ -10,6 +10,7 @@ session_start();
   </head>
   <body>
     <?php include_once('../css/nav.php');?>
+    <!-- load irc -->
     <iframe src="https://kiwiirc.com/client/chat.freenode.com/?nick=<?php echo $userRow['username'];?>&theme=cli#boekenier" style="border:0; width:100%; height:500px;"></iframe>
   </body>
 </html>

@@ -3,18 +3,25 @@ session_start();
 include_once('../config/allowedCheck.php');
 require_once('../config/db.php');
 $itemsPerPage = 30;
+// get current page
 if(isset($_GET['page'])){ $page = $_GET['page']; } else { $page = 1;}
 $start_from = ($page-1)* $itemsPerPage;
+// Get search
 if(isset($_GET['search']) && !empty($_GET['search'])){
+  // Search books and users by givin search request
   $sql = "SELECT * FROM books WHERE name LIKE '%$_GET[search]%'";
   $sql2 = "SELECT * FROM users WHERE username LIKE '%$_GET[search]%'";
 } else {
+  // Get all books, limited by 30
   $sql = "SELECT * FROM books ORDER BY created_at DESC LIMIT $start_from, $itemsPerPage";
 }
 $result = $conn->query($sql);
+// set result2 if get is search
 if(isset($_GET['search'])){
   $result2 = $conn->query($sql2);
 }
+
+// Format bytes to corresponding file size
 function formatBytes($bytes, $precision = 2){
   $units = array('B','KB', 'MB', 'GB', 'TB');
 
@@ -24,7 +31,10 @@ function formatBytes($bytes, $precision = 2){
   $bytes /= pow(1024, $pow);
   return round($bytes, $precision).' '.$units[$pow];
 }
+
+// Calculate totalItems
 $totalItems = $result->num_rows;
+// Calculate the pages
 $pages = ceil($totalItems/30);
 ?>
 <!DOCTYPE html>
@@ -64,13 +74,14 @@ $pages = ceil($totalItems/30);
                   <th>Size</th>
                   <th>Uploaded at</th>
                   <th>Version</th>
-                  <?php if($_SESSION['rank'] == 4) { ?>
+
+                  <?php if($_SESSION['rank'] == 4) { //if user is rank 4 show action ?>
                     <th>
                       Action
                     </th>
                     <?php } ?>
                 </tr>
-                <?php if($result->num_rows > 0 && strtolower($_GET['search']) != 'je moeder' && strtolower($_GET['search'] != 'space invaders')){ ?>
+                <?php if($result->num_rows > 0 && strtolower($_GET['search']) != 'je moeder' && strtolower($_GET['search'] != 'space invaders')){ // if search is not 'je moeder' or 'space invaders' then show books and users?>
                   <?php while($row = $result->fetch_assoc()){ ?>
                     <tr>
                     <td>
@@ -97,10 +108,10 @@ $pages = ceil($totalItems/30);
                       <?php } ?>
                     <?php
                   }
-                } elseif(isset($_GET['search']) && strtolower($_GET['search']) == 'je moeder'){
+                } elseif(isset($_GET['search']) && strtolower($_GET['search']) == 'je moeder'){ // if search is 'je moeder' then show an image
                   echo "<div class='text-center'><img src='http://childhoodobesitynews.com/wp-content/uploads/2015/06/eat-block-of-cheese.jpg'/><br />'";
                   echo "<h3><b>HIERRR</b> ".$_GET['search']."</h3></div>";
-                } elseif(isset($_GET['search']) && strtolower($_GET['search']) == 'space invaders'){
+                } elseif(isset($_GET['search']) && strtolower($_GET['search']) == 'space invaders'){ // if search is 'space invaders' then load space invaders
                   echo "<div class='text-center'><br/><iframe src='/config/spaceinvaders.html' width='640px' height='640px'/></div>";
                 } else { ?>
                   <td colspan="6">

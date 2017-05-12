@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+// If user is already logged in send him to hidden
 if(isset($_SESSION['user'])){
   echo "<script>window.location.href = 'hidden/index.php';</script>";
 }
@@ -19,15 +21,20 @@ if(isset($_SESSION['user'])){
         <h4 style="color: white;">Scientia sit Potentia</h4>
         <p style="color: white;" id="changelog" title="Click for changelog" data-toggle="tooltip">Version 2.5</p>
       </div>
+      <!-- Show an error if Session comes back with an error -->
       <?php if(isset($_SESSION['error'])) {?>
       <div class="alert alert-danger">
         <?php echo $_SESSION['error'];
+        // Delete session error
         unset($_SESSION['error']);
         ?>
       </div>
       <?php } ?>
+      <!-- javascript output field -->
       <div id="output">
       </div>
+
+      <!-- Show login form -->
       <div id="loginfield" class="card">
         <div class="card-block">
           <form method="post" action="config/login.php">
@@ -47,6 +54,8 @@ if(isset($_SESSION['user'])){
           </form>
         </div>
       </div>
+
+      <!-- show register form -->
       <div id="registerfield" style="display: none;" class="card">
         <div class="card-block">
           <div>
@@ -62,6 +71,8 @@ if(isset($_SESSION['user'])){
               <label class="control-label">Repeat password</label>
               <input class='form-control' type="password" name="password2" id="password2">
             </div>
+
+            <!-- users need to insert Invitation code otherwise they can't register -->
             <div class="form-group">
               <label class="control-label">Invitation code</label>
               <input class='form-control' type="text" name="inviteCode" id="inviteCode">
@@ -73,6 +84,8 @@ if(isset($_SESSION['user'])){
           </div>
         </div>
       </div>
+
+      <!-- Changelog modal -->
       <div class="modal fade" id="changelog-modal" tabindex="-1" role="diaog" aria-labelledby="ChangeLog" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -135,16 +148,18 @@ if(isset($_SESSION['user'])){
       </div>
     </div>
     <script>
+    // Load tooltip
       $(document).ready(function(){
-	console.log("TEST");
         $('[data-toggle="tooltip"]').tooltip();
       });
     </script>
+    <!-- load main.js -->
     <script src="js/main.js"></script>
     <script>
+    // Wait for on click on #changelog
         $("#changelog").on('click', function(e){
   	    e.preventDefault();
-  	    console.log("Clicked");
+  	    // Open modal
   	    $("#changelog-modal").modal('toggle');
 	});
     </script>

@@ -1,3 +1,4 @@
+<!-- this file has not been used in the original boekenier -->
 <?php
 session_start();
 if(!isset($_SESSION['user'])){

@@ -1,4 +1,5 @@
 <?php
+// Login script
 session_start();
 require_once('../db.php');
 if(isset($_POST['username']) && isset($_POST['password'])){

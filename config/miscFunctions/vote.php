@@ -1,4 +1,7 @@
 <?php
+/* Warning this is deprecated
+ * If you want to use it, then you need to fix bugs
+ */
 require_once('../db.php');
 switch($_POST['vote']){
   case '+':

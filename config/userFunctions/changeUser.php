@@ -1,9 +1,11 @@
 <?php
+// User edit script
 require_once('../db.php');
 $sql = "SELECT * FROM users WHERE id = '$_POST[id]'";
 $result = $conn->query($sql);
 $row = $result->fetch_assoc();
 $pass = hash('sha256', $_POST['oldPasswd']);
+ // if type is password then change the password
   switch ($_POST['type']) {
     case 'password':
       if($pass == $row['password']){
@@ -26,6 +28,7 @@ $pass = hash('sha256', $_POST['oldPasswd']);
         echo "Password not recognized!";
       }
       break;
+      // if type is theme than change theme
     case 'theme':
       $sql = "UPDATE users SET theme_color = '$_POST[data]' WHERE id = '$_POST[id]'";
       if($conn->query($sql) === true){

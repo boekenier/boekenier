@@ -1,3 +1,4 @@
+<!-- this file has not been used in the original boekenier -->
 <?php
 $message = "
 <html>
@@ -14,7 +15,7 @@ $message = "
 ";
 $headers = "MIME-Version: 1.0" . "\r\n";
 $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-  if(mail('boekenier@protonmail.com', $_POST['category'], $message, $headers)){
+  if(mail('change@me.com', $_POST['category'], $message, $headers)){
     echo "success";
   } else {
     echo "Mail was not sent";
